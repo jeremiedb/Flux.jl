@@ -35,20 +35,22 @@ end
 
 opt = ADAM(1e-3)
 opt_gpu = ADAM(1e-3)
-for i in 1:25
+for i in 1:5
     println("iter: ", i)
     Flux.train!(loss, θ, [(X, Y)], opt)
     Flux.train!(loss_gpu, θ_gpu, [(X_gpu, Y_gpu)], opt_gpu)
     println("loss_cpu: ", loss(X, Y))
     println("loss_gpu: ", loss_gpu(X_gpu, Y_gpu))
-    println("θ[3][1:2]: ", θ[3][1:2])
-    println("θ_gpu[3][1:2]: ", θ_gpu[3][1:2])
-    println("θ[4][1:2]: ", θ[4][1:2])
-    println("θ_gpu[4][1:2]: ", θ_gpu[4][1:2])
-    println("rnn.layers[1].state[1:2]: ", rnn.layers[1].state[1:2])
-    println("rnn_gpu.layers[1].state[1:2]: ", rnn_gpu.layers[1].state[1:2])
+    # println("θ[3][1:2]: ", θ[3][1:2])
+    # println("θ_gpu[3][1:2]: ", θ_gpu[3][1:2])
+    # println("θ[4][1:2]: ", θ[4][1:2])
+    # println("θ_gpu[4][1:2]: ", θ_gpu[4][1:2])
+    # println("rnn.layers[1].state[1:2]: ", rnn.layers[1].state[1:2])
+    # println("rnn_gpu.layers[1].state[1:2]: ", rnn_gpu.layers[1].state[1:2])
 end
 
+rnn(X[1])
+@code_warntype rnn(X[1])
 
 function speed_cpu(n=10)
     for i in 1:n
@@ -132,7 +134,7 @@ function speed_gpu(n=10)
     return loss_gpu(X_gpu, Y_gpu)
 end
 
-@code_warntype rnn(X)
+@code_warntype rnn(X[1])
 
 @time speed_cpu(100)
 @time speed_gpu(100)
@@ -197,7 +199,7 @@ function speed_gpu(n=10)
     return loss_gpu(X_gpu, Y_gpu)
 end
 
-@code_warntype rnn(X)
+@code_warntype rnn(X[1])
 
 @time speed_cpu(100)
 @time speed_gpu(100)
