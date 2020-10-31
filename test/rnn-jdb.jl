@@ -49,7 +49,6 @@ for i in 1:5
     # println("rnn_gpu.layers[1].state[1:2]: ", rnn_gpu.layers[1].state[1:2])
 end
 
-rnn(X[1])
 @code_warntype rnn(X[1])
 
 function speed_cpu(n=10)
@@ -68,12 +67,6 @@ end
 
 @time speed_cpu(100)
 @time speed_gpu(100)
-
-θ[3]
-θ[4]
-θ[5]
-θ[6]
-
 
 #####################################
 # LSTM

@@ -105,7 +105,7 @@ function LSTMCell(in::Integer, out::Integer;
                   init = glorot_uniform,
                   initb = zeros,
                   init_state = zeros)
-  cell = LSTMCell(init(out * 4, in), init(out * 4, out), initb(out * 4), (init_state(out), init_state(out)))
+  cell = LSTMCell(init(out * 4, in), init(out * 4, out), initb(out * 4), (init_state(out,1), init_state(out,1)))
   cell.b[gate(out, 2)] .= 1
   return cell
 end
