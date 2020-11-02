@@ -8,9 +8,11 @@ h_size = 64
 seq_len = 50
 batch_size = 256
 
-rnn = Chain(RNN(feat, h_size),
-  Dense(h_size, 1, σ),
-  x -> reshape(x, :))
+rnn = Chain(
+    RNN(feat, h_size),
+    RNN(h_size, h_size),
+    Dense(h_size, 1, σ),
+    x -> reshape(x, :))
 
 X = [rand(Float32, feat, batch_size) for i in 1:seq_len]
 Y = rand(Float32, batch_size, seq_len) ./ 10
@@ -77,8 +79,8 @@ seq_len = 50
 batch_size = 256
 
 rnn = Chain(LSTM(feat, h_size),
-  Dense(h_size, 1, σ),
-  x -> reshape(x, :))
+    Dense(h_size, 1, σ),
+    x -> reshape(x, :))
 
 X = [rand(Float32, feat, batch_size) for i in 1:seq_len]
 Y = rand(Float32, batch_size, seq_len) ./ 10
