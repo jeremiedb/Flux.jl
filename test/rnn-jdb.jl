@@ -4,7 +4,7 @@ using Statistics: mean
 using Random: seed!
 
 
-
+# Dense layers no bias tests
 struct Dense{F,S <: AbstractArray,T <: AbstractArray}
     W::S
     b::T
