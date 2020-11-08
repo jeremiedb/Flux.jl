@@ -3,44 +3,6 @@ using Flux
 using Statistics: mean
 using Random: seed!
 
-
-# Dense layers no bias tests
-struct Dense{F,S <: AbstractArray,T <: AbstractArray}
-    W::S
-    b::T
-    σ::F
-end
-
-struct DenseNoBias{F,S <: AbstractArray}
-    W::S
-    σ::F
-end
-
-Dense(W, b) = Dense(W, b, identity)
-Dense(W) = DenseNoBias(W, identity)
-
-function Dense(in::Integer, out::Integer, σ=identity;
-                 no_bias=false, initW=glorot_uniform, initb=zeros)
-    if no_bias
-        return DenseNoBias(initW(out, in), σ)
-    else
-        return Dense(initW(out, in), initb(out), σ)
-    end
-end
-
-@functor Dense
-@functor DenseNoBias
-
-function (a::Dense)(x::AbstractArray)
-    W, b, σ = a.W, a.b, a.σ
-    σ.(W * x .+ b)
-end
-
-function (a::DenseNoBias)(x::AbstractArray)
-    W, σ = a.W, a.σ
-    σ.(W * x)
-end
-
 # illustrate diverging behavior of GPU execution
 seed!(123)
 feat = 3
