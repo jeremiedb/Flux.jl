@@ -71,11 +71,7 @@ struct RNNCell{F,A,V,S}
   Wi::A
   Wh::A
   b::V
-<<<<<<< HEAD
   state0::S
-=======
-  state::S
->>>>>>> d01d5baefbc2f4a29f55d5a44aab0bdd0872b418
 end
 
 RNNCell(in::Integer, out::Integer, σ=tanh; init=Flux.glorot_uniform, initb=zeros, init_state=zeros) = 
@@ -180,11 +176,7 @@ struct GRUCell{A,V,S}
   Wi::A
   Wh::A
   b::V
-<<<<<<< HEAD
   state0::S
-=======
-  state::S
->>>>>>> d01d5baefbc2f4a29f55d5a44aab0bdd0872b418
 end
 
 GRUCell(in, out; init = glorot_uniform, initb = zeros, init_state = zeros) =
