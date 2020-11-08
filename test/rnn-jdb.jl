@@ -5,10 +5,14 @@ using Random: seed!
 
 # illustrate diverging behavior of GPU execution
 seed!(123)
-feat = 3
-batch_size = 256
+feat = 64
+hidden = 256
+batch_size = 1024
 
-m_cpu = Chain(Dense(rand(1, 3), zeros(1), σ))
+m_cpu = Chain(Dense(feat, hidden, relu),
+    Dense(hidden, hidden, relu),
+    Dense(hidden, 1))
+
 X = rand(Float32, feat, batch_size)
 Y = rand(Float32, batch_size) ./ 10
 
@@ -31,18 +35,25 @@ function loss_gpu(x, y)
     return l
 end
 
-opt_cpu = ADAM(1e-3)
-opt_gpu = ADAM(1e-3)
+opt_cpu = Descent(1e-3)
+opt_gpu = Descent(1e-3)
 for i in 1:5
     println("iter: ", i)
     Flux.train!(loss_cpu, θ_cpu, [(X, Y)], opt_cpu)
     # Flux.train!(loss_gpu, θ_gpu, [(X_gpu, Y_gpu)], opt_gpu)
-    println("loss_cpu: ", loss(X, Y))
+    # println("loss_cpu: ", loss_cpu(X, Y))
     # println("loss_gpu: ", loss_gpu(X_gpu, Y_gpu))
 end
 
-θ_cpu
-θ_gpu
+function speed_gpu(n=10)
+    for i in 1:n
+        Flux.train!(loss_gpu, θ_gpu, [(X_gpu, Y_gpu)], opt_gpu)
+    end
+    return loss_gpu(X_gpu, Y_gpu)
+end
+
+using BenchmarkTools
+@btime speed_gpu(100)
 
 
 
