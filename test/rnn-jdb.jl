@@ -12,8 +12,9 @@ function mul(x,y)
     x * y
 end
 
-@benchmark @sync mul($x1, $x2)
-@benchmark @sync $x1 * $x2
+@benchmark CUDA.@sync mul($x1, $x2)
+@benchmark $x1 * $x2
+@benchmark CUDA.@sync $x1 * $x2
 
 # illustrate diverging behavior of GPU execution
 seed!(123)
