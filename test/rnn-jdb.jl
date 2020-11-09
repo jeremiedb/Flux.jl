@@ -2,6 +2,19 @@ using Revise
 using Flux
 using Statistics: mean
 using Random: seed!
+using BenchmarkTools
+
+# CUDA 1 vs 2: matrix multiplication
+using CUDA
+x1, x2 = CuArray(rand(Float32, 128, 256)), CuArray(rand(Float32, 256, 1024))
+
+function mul(x,y)
+    for i in 1:1
+        x * y
+    end
+end
+
+@benchmark @sync mul(x1, x2)
 
 # illustrate diverging behavior of GPU execution
 seed!(123)
@@ -52,7 +65,6 @@ function speed_gpu(n=10)
     return loss_gpu(X_gpu, Y_gpu)
 end
 
-using BenchmarkTools
 @btime speed_gpu(100)
 
 
