@@ -9,12 +9,11 @@ using CUDA
 x1, x2 = CuArray(rand(Float32, 128, 256)), CuArray(rand(Float32, 256, 1024))
 
 function mul(x,y)
-    for i in 1:1
-        x * y
-    end
+    x * y
 end
 
-@benchmark @sync mul(x1, x2)
+@benchmark @sync mul($x1, $x2)
+@benchmark @sync $x1 * $x2
 
 # illustrate diverging behavior of GPU execution
 seed!(123)
