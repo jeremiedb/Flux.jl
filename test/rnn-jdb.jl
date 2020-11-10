@@ -16,6 +16,10 @@ end
 @benchmark $x1 * $x2
 @benchmark CUDA.@sync $x1 * $x2
 
+CUBLAS.cublasLoggerConfigure(1, 0, 1, C_NULL)
+x1, x2 = CuArray(rand(Float32, 128, 256)), CuArray(rand(Float32, 256, 1024))
+x1 * x2
+
 # illustrate diverging behavior of GPU execution
 seed!(123)
 feat = 64
