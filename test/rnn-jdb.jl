@@ -20,6 +20,48 @@ CUBLAS.cublasLoggerConfigure(1, 0, 1, C_NULL)
 x1, x2 = CuArray(rand(Float32, 128, 256)), CuArray(rand(Float32, 256, 1024))
 x1 * x2
 
+
+###################
+# https://github.com/FluxML/Flux.jl/issues/1360
+###################
+function prepare_time_series_data_4_flux(X,Y)
+	num_batches = length(X)
+	x = Vector{Array{Float32}}(undef, num_batches)
+	y = Vector{Array{Float32}}(undef, num_batches)
+	for i in 1:length(X)
+		x[i] = Float32.(reshape(X[i], size(X[i],2), size(X[i], 1)))
+		y[i] = Float32.(reshape(Y[i], size(Y[i], 2), size(Y[i], 1)))
+	end
+
+	return x, y
+end
+
+feat = 6
+batch_size = 256
+num_batches = 100
+seq_len = 20
+
+X = [[rand(Float32, feat, batch_size) for i in 1:seq_len] for batch in 1:num_batches];
+Y = [rand(Float32, batch_size, seq_len) ./ 10  for batch in 1:num_batches];
+
+X = X |> gpu;
+Y = Y |> gpu;
+data = zip(X, Y);
+
+opt = ADAM(0.001, (0.9, 0.999))
+
+function loss(X,Y)
+    Flux.reset!(model)
+    mse_val = sum(abs2.(Y .- Flux.stack(model.(X), 2)))
+    return mse_val
+end]
+
+model = Chain(LSTM(6, 70), LSTM(70, 70), LSTM(70, 70), Dense(70, 1, relu)) |> gpu
+ps = Flux.params(model)
+Flux.reset!(model)
+
+@time Flux.train!(loss, ps, data, opt)
+
 # illustrate diverging behavior of GPU execution
 seed!(123)
 feat = 64
