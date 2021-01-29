@@ -1,6 +1,12 @@
 using Flux, CUDA, Test
 using Flux: pullback
 
+using Flux
+m = RNN(5, 5)
+loss(x) = sum(Flux.stack(m.(x), 2))
+x = [rand(5) for i in 1:2]
+Flux.train!(loss, Flux.params(m), x, ADAM())
+
 @testset for R in [RNN, GRU, LSTM]
   m = R(10, 5) |> gpu
   x = gpu(rand(10))
